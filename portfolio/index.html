@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shaik Moyeen | 3D Portfolio & Mobile/Software Developer</title>
+  <meta name="description" content="Personal 3D Portfolio of Shaik Moyeen - Computer Science and Engineering Student at Amrita School of Engineering, Mobile Application Developer, and Software Engineer." />
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              400: '#818cf8',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+            },
+            cyan: {
+              400: '#38bdf8',
+              500: '#06b6d4',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <!-- Three.js for 3D Interactive Background -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body class="bg-[#070913] text-slate-100 antialiased selection:bg-indigo-500/30 selection:text-white">
+
+  <!-- Custom Cyber Glowing Cursor -->
+  <div id="custom-cursor-dot"></div>
+  <div id="custom-cursor-outline"></div>
+
+  <!-- 3D WebGL Background Canvas -->
+  <canvas id="webgl-canvas"></canvas>
+
+  <!-- Ambient Glowing Blobs -->
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
+  <div class="ambient-glow glow-3"></div>
+
+  <!-- Navigation Bar -->
+  <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 backdrop-blur-xl bg-[#070913]/75 border-b border-white/10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <!-- Logo -->
+      <a href="#hero" class="flex items-center gap-3 group">
+        <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-cyan-400 p-[2px] shadow-lg shadow-indigo-500/25 transition-transform duration-300 group-hover:scale-105">
+          <div class="w-full h-full bg-[#070913] rounded-[10px] flex items-center justify-center font-heading font-black text-xl text-gradient">
+            SM
+          </div>
+        </div>
+        <div class="flex flex-col">
+          <span class="font-heading font-bold text-lg text-white tracking-wide group-hover:text-indigo-400 transition-colors">Shaik Moyeen</span>
+          <span class="text-xs font-mono text-cyan-400">B.Tech CSE &bull; Amrita</span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav Links -->
+      <nav class="hidden md:flex items-center gap-7 text-sm font-medium text-slate-300">
+        <a href="#about" class="nav-link hover:text-indigo-400 transition-colors py-1">About</a>
+        <a href="#skills" class="nav-link hover:text-indigo-400 transition-colors py-1">Skills</a>
+        <a href="#projects" class="nav-link hover:text-indigo-400 transition-colors py-1">Projects</a>
+        <a href="#education" class="nav-link hover:text-indigo-400 transition-colors py-1">Education &amp; Certs</a>
+        <a href="#contact" class="nav-link hover:text-indigo-400 transition-colors py-1">Contact</a>
+      </nav>
+
+      <!-- Action Buttons & Socials -->
+      <div class="hidden md:flex items-center gap-4">
+        <a href="https://github.com/Moyeen786" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-xl glass-card flex items-center justify-center text-slate-300 hover:text-white hover:border-indigo-500/50 transition-all hover:scale-110" title="GitHub Profile">
+          <i class="fa-brands fa-github text-lg"></i>
+        </a>
+        <a href="https://www.linkedin.com/in/moyeen-shaik-b19a98306/" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-xl glass-card flex items-center justify-center text-slate-300 hover:text-cyan-400 hover:border-cyan-500/50 transition-all hover:scale-110" title="LinkedIn Profile">
+          <i class="fa-brands fa-linkedin-in text-lg"></i>
+        </a>
+        <button class="open-resume-btn px-4 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-cyan-600 hover:from-indigo-500 hover:to-cyan-500 text-white font-medium text-sm btn-3d flex items-center gap-2">
+          <i data-lucide="file-text" class="w-4 h-4"></i>
+          <span>Resume</span>
+        </button>
+      </div>
+
+      <!-- Mobile Menu Button -->
+      <button id="mobile-menu-btn" class="md:hidden w-10 h-10 rounded-xl glass-card flex items-center justify-center text-slate-300">
+        <i data-lucide="menu" class="w-5 h-5"></i>
+      </button>
+    </div>
+
+    <!-- Mobile Dropdown -->
+    <div id="mobile-menu" class="hidden md:hidden px-6 py-5 bg-[#0a0d1d]/95 backdrop-blur-2xl border-b border-white/10 flex flex-col gap-4">
+      <a href="#about" class="nav-link text-slate-300 hover:text-indigo-400 py-1">About</a>
+      <a href="#skills" class="nav-link text-slate-300 hover:text-indigo-400 py-1">Skills</a>
+      <a href="#projects" class="nav-link text-slate-300 hover:text-indigo-400 py-1">Projects</a>
+      <a href="#education" class="nav-link text-slate-300 hover:text-indigo-400 py-1">Education &amp; Certifications</a>
+      <a href="#contact" class="nav-link text-slate-300 hover:text-indigo-400 py-1">Contact</a>
+      <div class="flex items-center gap-4 pt-3 border-t border-white/10">
+        <button class="open-resume-btn w-full py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold flex items-center justify-center gap-2">
+          <i data-lucide="file-text" class="w-4 h-4"></i> View Resume
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section id="hero" class="min-h-screen pt-32 pb-20 flex items-center relative z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+        
+        <!-- Left Hero Content -->
+        <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+          
+          <!-- Status Pill -->
+          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-950/60 border border-indigo-500/30 backdrop-blur-md shadow-lg shadow-indigo-950/50">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span class="text-xs font-mono font-medium text-indigo-300">Available for Summer Internships &amp; Tech Roles</span>
+          </div>
+
+          <!-- Main Title -->
+          <div class="space-y-2">
+            <h2 class="text-lg sm:text-xl font-mono text-cyan-400 font-semibold tracking-wider uppercase">Hello, I'm</h2>
+            <h1 class="text-4xl sm:text-6xl lg:text-7xl font-heading font-black tracking-tight leading-none text-white">
+              Shaik <span class="text-gradient">Moyeen</span>
+            </h1>
+          </div>
+
+          <!-- Dynamic Typewriter -->
+          <div class="h-9 flex items-center justify-center lg:justify-start">
+            <span class="text-xl sm:text-2xl font-mono text-slate-300 font-semibold">
+              &gt; <span id="typewriter-text" class="text-indigo-400 border-r-2 border-indigo-400 pr-1 animate-pulse"></span>
+            </span>
+          </div>
+
+          <!-- Intro Paragraph -->
+          <p class="text-base sm:text-lg text-slate-300 max-w-2xl leading-relaxed font-light">
+            Dedicated <span class="text-indigo-300 font-medium">Computer Science &amp; Engineering</span> student at <span class="text-cyan-300 font-medium">Amrita School of Engineering, Coimbatore</span> (2024–2028). Passionate about architecting intuitive <span class="text-pink-300 font-medium">Mobile Applications (Flutter &amp; Firebase)</span>, algorithm-driven software, scalable full-stack web apps, and AI solutions.
+          </p>
+
+          <!-- CTAs -->
+          <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2">
+            <a href="#projects" class="px-7 py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-cyan-500 text-white font-semibold text-sm btn-3d flex items-center gap-2.5 shadow-lg shadow-indigo-600/30">
+              <i data-lucide="sparkles" class="w-4 h-4"></i>
+              <span>Explore Projects</span>
+            </a>
+            <button class="open-resume-btn px-6 py-3.5 rounded-xl glass-card hover:border-indigo-400/50 text-slate-200 hover:text-white font-semibold text-sm flex items-center gap-2.5 transition-all">
+              <i data-lucide="file-down" class="w-4 h-4 text-cyan-400"></i>
+              <span>View / Download CV</span>
+            </button>
+            <a href="#contact" class="px-6 py-3.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 border border-slate-700 text-slate-200 hover:text-white font-medium text-sm flex items-center gap-2 transition-all">
+              <i data-lucide="mail" class="w-4 h-4 text-indigo-400"></i>
+              <span>Get in Touch</span>
+            </a>
+          </div>
+
+          <!-- Social Quick Links & Contact Badges -->
+          <div class="pt-6 border-t border-slate-800/80 flex flex-wrap items-center justify-center lg:justify-start gap-5 text-sm text-slate-400 font-mono">
+            <a href="https://github.com/Moyeen786" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 hover:text-white transition-colors">
+              <i class="fa-brands fa-github text-base text-indigo-400"></i>
+              <span>github/Moyeen786</span>
+            </a>
+            <a href="https://www.linkedin.com/in/moyeen-shaik-b19a98306/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 hover:text-cyan-400 transition-colors">
+              <i class="fa-brands fa-linkedin text-base text-cyan-400"></i>
+              <span>linkedin/moyeen-shaik</span>
+            </a>
+            <button onclick="copyToClipboard('cb.sc.u4cse24347@cb.students.amrita.edu', 'Email')" class="flex items-center gap-2 hover:text-indigo-300 transition-colors cursor-pointer" title="Click to copy email">
+              <i data-lucide="copy" class="w-4 h-4 text-pink-400"></i>
+              <span>cb.sc.u4cse24347@...</span>
+            </button>
+          </div>
+
+        </div>
+
+        <!-- Right Hero Visual: 3D Holographic Avatar Card -->
+        <div class="lg:col-span-5 flex justify-center items-center">
+          <div class="holo-avatar-container relative">
+            
+            <!-- Orbital Rings -->
+            <div class="holo-ring"></div>
+            <div class="holo-ring-2"></div>
+
+            <!-- Floating 3D Badges -->
+            <div class="absolute -top-6 -left-6 z-20 floating-badge glass-card px-4 py-2 rounded-2xl flex items-center gap-3 border border-indigo-500/40 shadow-xl shadow-indigo-950/60">
+              <div class="w-8 h-8 rounded-xl bg-indigo-600/30 flex items-center justify-center text-indigo-400 font-bold text-lg">
+                ☕
+              </div>
+              <div>
+                <p class="text-[11px] font-mono text-slate-400 uppercase">Core Logic</p>
+                <p class="text-xs font-bold text-white">Java &amp; Swing</p>
+              </div>
+            </div>
+
+            <div class="absolute -bottom-6 -right-6 z-20 floating-badge-2 glass-card px-4 py-2 rounded-2xl flex items-center gap-3 border border-cyan-500/40 shadow-xl shadow-cyan-950/60">
+              <div class="w-8 h-8 rounded-xl bg-cyan-600/30 flex items-center justify-center text-cyan-400 font-bold text-lg">
+                📱
+              </div>
+              <div>
+                <p class="text-[11px] font-mono text-slate-400 uppercase">App Dev</p>
+                <p class="text-xs font-bold text-white">Flutter &amp; Dart</p>
+              </div>
+            </div>
+
+            <div class="absolute top-1/2 -right-10 z-20 floating-badge glass-card px-3.5 py-1.5 rounded-2xl flex items-center gap-2 border border-pink-500/40 shadow-xl shadow-pink-950/60 hidden sm:flex">
+              <span class="w-2 h-2 rounded-full bg-pink-500 animate-ping"></span>
+              <p class="text-xs font-bold text-pink-300">Firebase &amp; APIs</p>
+            </div>
+
+            <!-- Main Photo Card with 3D Tilt -->
+            <div class="holo-avatar-card w-72 sm:w-80 md:w-88 aspect-[4/5] relative z-10 glass-card">
+              <img src="assets/images/profile.jpg" alt="Shaik Moyeen" class="holo-avatar-img shadow-2xl" />
+              
+              <!-- Overlay Pill -->
+              <div class="absolute bottom-4 left-4 right-4 p-3 rounded-xl bg-[#070913]/80 backdrop-blur-md border border-white/10 flex items-center justify-between">
+                <div>
+                  <h4 class="text-sm font-bold text-white">Shaik Moyeen</h4>
+                  <p class="text-[11px] text-slate-400">Mobile &amp; Software Developer</p>
+                </div>
+                <div class="w-8 h-8 rounded-lg bg-indigo-600/30 flex items-center justify-center text-indigo-400">
+                  <i data-lucide="smartphone" class="w-4 h-4"></i>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Key Metrics & Highlights Bar -->
+  <section class="relative z-10 -mt-8 mb-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+      
+      <div class="glass-card tilt-card p-6 rounded-2xl glow-border">
+        <div class="tilt-card-content flex items-center gap-4">
+          <div class="w-12 h-12 rounded-xl bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
+            <i data-lucide="graduation-cap" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <div class="text-2xl font-heading font-black text-white">2024-28</div>
+            <div class="text-xs text-slate-400 font-mono">B.Tech CSE @ Amrita</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-card tilt-card p-6 rounded-2xl glow-border">
+        <div class="tilt-card-content flex items-center gap-4">
+          <div class="w-12 h-12 rounded-xl bg-cyan-600/20 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
+            <i data-lucide="smartphone" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <div class="text-2xl font-heading font-black text-white">Flutter</div>
+            <div class="text-xs text-slate-400 font-mono">Mobile App Specialist</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-card tilt-card p-6 rounded-2xl glow-border">
+        <div class="tilt-card-content flex items-center gap-4">
+          <div class="w-12 h-12 rounded-xl bg-pink-600/20 border border-pink-500/30 flex items-center justify-center text-pink-400">
+            <i data-lucide="code" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <div class="text-2xl font-heading font-black text-white">4+</div>
+            <div class="text-xs text-slate-400 font-mono">Engineered Projects</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-card tilt-card p-6 rounded-2xl glow-border">
+        <div class="tilt-card-content flex items-center gap-4">
+          <div class="w-12 h-12 rounded-xl bg-amber-600/20 border border-amber-500/30 flex items-center justify-center text-amber-400">
+            <i data-lucide="award" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <div class="text-2xl font-heading font-black text-white">4</div>
+            <div class="text-xs text-slate-400 font-mono">Certifications (MS/IBM)</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- About Me Section -->
+  <section id="about" class="py-24 relative z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Section Header -->
+      <div class="text-center space-y-3 mb-16 reveal-fade">
+        <span class="text-xs font-mono font-bold tracking-widest text-indigo-400 uppercase bg-indigo-950/60 px-3.5 py-1.5 rounded-full border border-indigo-500/30">Background &amp; Profile</span>
+        <h2 class="text-3xl sm:text-5xl font-heading font-bold text-white">Engineering with <span class="text-gradient">Precision &amp; Passion</span></h2>
+        <p class="text-slate-400 text-sm sm:text-base max-w-2xl mx-auto">Get to know my technical foundation, mobile app architecture values, and problem-solving methodology.</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+        
+        <!-- About Narrative Card -->
+        <div class="lg:col-span-7 glass-card p-8 sm:p-10 rounded-3xl space-y-6 reveal-fade">
+          <div class="flex items-center gap-3 pb-4 border-b border-white/10">
+            <div class="w-10 h-10 rounded-xl bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
+              <i data-lucide="user-check" class="w-5 h-5"></i>
+            </div>
+            <h3 class="text-xl font-heading font-bold text-white">Who I Am</h3>
+          </div>
+
+          <div class="space-y-4 text-slate-300 text-base leading-relaxed">
+            <p>
+              I am a dedicated <strong class="text-white">Computer Science and Engineering</strong> undergraduate student at <strong class="text-cyan-400">Amrita School of Engineering, Coimbatore</strong> (2024–2028). With a solid foundation in data structures, algorithms, and object-oriented programming, I enjoy building software solutions that solve real-world problems.
+            </p>
+            <p>
+              My hands-on experience spans <strong class="text-pink-300">Cross-Platform Mobile Application Development (Flutter, Dart, Firebase)</strong>, <strong class="text-indigo-300">Java Swing algorithmic puzzle systems</strong>, <strong class="text-indigo-300">Python desktop utilities</strong>, and <strong class="text-cyan-300">Healthcare web portals</strong>.
+            </p>
+            <p>
+              I thrive on architecting clean, maintainable code, implementing responsive mobile UI designs with real-time state management, exploring modern AI/ML frameworks, and collaborating across teams to deliver high-impact software.
+            </p>
+          </div>
+
+          <!-- Quick facts grid -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-white/10 font-mono text-xs">
+            <div class="flex items-center gap-2.5 text-slate-300">
+              <span class="text-indigo-400">📍</span>
+              <span><strong>Location:</strong> Coimbatore / AP, India</span>
+            </div>
+            <div class="flex items-center gap-2.5 text-slate-300">
+              <span class="text-cyan-400">🎓</span>
+              <span><strong>Degree:</strong> B.Tech CSE (2024–2028)</span>
+            </div>
+            <div class="flex items-center gap-2.5 text-slate-300">
+              <span class="text-pink-400">✉️</span>
+              <span><strong>Email:</strong> cb.sc.u4cse24347...</span>
+            </div>
+            <div class="flex items-center gap-2.5 text-slate-300">
+              <span class="text-emerald-400">📞</span>
+              <span><strong>Phone:</strong> +91 6303702207</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Highlights / Pillars Card -->
+        <div class="lg:col-span-5 grid grid-cols-1 gap-4">
+          
+          <div class="glass-card tilt-card p-6 rounded-2xl glow-border reveal-fade">
+            <div class="tilt-card-content flex items-start gap-4">
+              <div class="w-10 h-10 rounded-xl bg-pink-600/30 flex items-center justify-center text-pink-400 shrink-0">
+                <i data-lucide="smartphone" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <h4 class="text-base font-bold text-white mb-1">Mobile Application Development</h4>
+                <p class="text-xs text-slate-400 leading-relaxed">Building cross-platform iOS &amp; Android apps with Flutter, Dart, Firebase backend, offline persistence, and seamless state management.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="glass-card tilt-card p-6 rounded-2xl glow-border reveal-fade">
+            <div class="tilt-card-content flex items-start gap-4">
+              <div class="w-10 h-10 rounded-xl bg-indigo-600/30 flex items-center justify-center text-indigo-400 shrink-0">
+                <i data-lucide="binary" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <h4 class="text-base font-bold text-white mb-1">Algorithms &amp; Problem Solving</h4>
+                <p class="text-xs text-slate-400 leading-relaxed">Solid grasp of Greedy methods, Dynamic Programming, Divide &amp; Conquer, and efficient algorithmic complexity analysis.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="glass-card tilt-card p-6 rounded-2xl glow-border reveal-fade">
+            <div class="tilt-card-content flex items-start gap-4">
+              <div class="w-10 h-10 rounded-xl bg-cyan-600/30 flex items-center justify-center text-cyan-400 shrink-0">
+                <i data-lucide="layout-grid" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <h4 class="text-base font-bold text-white mb-1">Full-Stack &amp; Web Systems</h4>
+                <p class="text-xs text-slate-400 leading-relaxed">Designing accessible, responsive web interfaces using HTML5, CSS3, JavaScript, Bootstrap 5, and RESTful service integrations.</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Technical Skills Section -->
+  <section id="skills" class="py-24 relative z-10 cyber-grid">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Section Header -->
+      <div class="text-center space-y-3 mb-16 reveal-fade">
+        <span class="text-xs font-mono font-bold tracking-widest text-cyan-400 uppercase bg-cyan-950/60 px-3.5 py-1.5 rounded-full border border-cyan-500/30">Skill Arsenal</span>
+        <h2 class="text-3xl sm:text-5xl font-heading font-bold text-white">Technical <span class="text-gradient-cyan">Expertise</span></h2>
+        <p class="text-slate-400 text-sm sm:text-base max-w-2xl mx-auto">Categorized overview of programming languages, mobile frameworks, developer tools, and core computer science fundamentals.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        
+        <!-- Card 1: Programming Languages -->
+        <div class="glass-card tilt-card p-6 rounded-3xl glow-border reveal-fade">
+          <div class="tilt-card-content space-y-5">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
+                <i data-lucide="code-2" class="w-5 h-5"></i>
+              </div>
+              <h3 class="text-lg font-heading font-bold text-white">Languages</h3>
+            </div>
+
+            <div class="flex flex-wrap gap-2">
+              <span class="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700/80 text-xs font-mono text-indigo-300 flex items-center gap-1.5">
+                <i class="fa-brands fa-python text-yellow-400"></i> Python
+              </span>
+              <span class="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700/80 text-xs font-mono text-cyan-300 flex items-center gap-1.5">
+                <i class="fa-brands fa-java text-orange-400"></i> Java
+              </span>
+              <span class="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700/80 text-xs font-mono text-cyan-300 flex items-center gap-1.5">
+                <i class="fa-brands fa-google text-cyan-400"></i> Dart
+              </span>
+              <span class="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700/80 text-xs font-mono text-blue-300 flex items-center gap-1.5">
+                <i class="fa-solid fa-c text-blue-400"></i> C Language
+              </span>
+              <span class="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700/80 text-xs font-mono text-emerald-300 flex items-center gap-1.5">
+                <i class="fa-solid fa-database text-emerald-400"></i> SQL (T-SQL)
+              </span>
+              <span class="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700/80 text-xs font-mono text-orange-300 flex items-center gap-1.5">
+                <i class="fa-brands fa-html5 text-orange-500"></i> HTML5
+              </span>
+              <span class="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700/80 text-xs font-mono text-blue-300 flex items-center gap-1.5">
+                <i class="fa-brands fa-css3-alt text-blue-400"></i> CSS3
+              </span>
+              <span class="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700/80 text-xs font-mono text-yellow-300 flex items-center gap-1.5">
+                <i class="fa-brands fa-js text-yellow-400"></i> JavaScript (ES6)
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: Mobile Application Development -->
+        <div class="glass-card tilt-card p-6 rounded-3xl glow-border reveal-fade">
+          <div class="tilt-card-content space-y-5">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-pink-600/20 border border-pink-500/30 flex items-center justify-center text-pink-400">
+                <i data-lucide="smartphone" class="w-5 h-5"></i>
+              </div>
+              <h3 class="text-lg font-heading font-bold text-white">Mobile App Dev</h3>
+            </div>
+
+            <div class="flex flex-wrap gap-2">
+              <span class="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700/80 text-xs font-mono text-cyan-300 flex items-center gap-1.5">
+                <i class="fa-brands fa-flutter text-cyan-400"></i> Flutter
+              </span>
+              <span class="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700/80 text-xs font-mono text-cyan-300 flex items-center gap-1.5">
+                <i class="fa-brands fa-google text-cyan-400"></i> Dart
+              </span>
+              <span class="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700/80 text-xs font-mono text-amber-300 flex items-center gap-1.5">
+                <i class="fa-solid fa-fire text-amber-400"></i> Firebase Auth &amp; DB
+              </span>
+              <span class="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700/80 text-xs font-mono text-emerald-300 flex items-center gap-1.5">
+                <i class="fa-brands fa-android text-emerald-400"></i> Android Studio
+              </span>
+              <span class="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700/80 text-xs font-mono text-indigo-300 flex items-center gap-1.5">
+                <i class="fa-solid fa-network-wired text-indigo-400"></i> REST APIs
+              </span>
+              <span class="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700/80 text-xs font-mono text-pink-300">
+                State Management
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3: Frameworks & Web Systems -->
+        <div class="glass-card tilt-card p-6 rounded-3xl glow-border reveal-fade">
+          <div class="tilt-card-content space-y-5">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-cyan-600/20 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
+                <i data-lucide="layers" class="w-5 h-5"></i>
+              </div>
+              <h3 class="text-lg font-heading font-bold text-white">Frameworks &amp; Web</h3>
+            </div>
+
+            <div class="flex flex-wrap gap-2">
+              <span class="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700/80 text-xs font-mono text-purple-300 flex items-center gap-1.5">
+                <i class="fa-brands fa-bootstrap text-purple-400"></i> Bootstrap 5
+              </span>
+              <span class="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700/80 text-xs font-mono text-cyan-300 flex items-center gap-1.5">
+                <i class="fa-solid fa-mobile-screen-button text-cyan-400"></i> Responsive Web UI
+              </span>
+              <span class="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700/80 text-xs font-mono text-orange-300 flex items-center gap-1.5">
+                <i class="fa-solid fa-window-maximize text-orange-400"></i> Java Swing GUI
+              </span>
+              <span class="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700/80 text-xs font-mono text-emerald-300">
+                DOM &amp; Web APIs
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4: Core Computer Science -->
+        <div class="glass-card tilt-card p-6 rounded-3xl glow-border reveal-fade">
+          <div class="tilt-card-content space-y-5">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
+                <i data-lucide="cpu" class="w-5 h-5"></i>
+              </div>
+              <h3 class="text-lg font-heading font-bold text-white">CS Fundamentals</h3>
+            </div>
+
+            <div class="flex flex-wrap gap-2">
+              <span class="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700/80 text-xs font-mono text-pink-300">
+                Data Structures &amp; Algorithms
+              </span>
+              <span class="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700/80 text-xs font-mono text-indigo-300">
+                OOP (Object-Oriented)
+              </span>
+              <span class="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700/80 text-xs font-mono text-emerald-300">
+                Problem Solving
+              </span>
+              <span class="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700/80 text-xs font-mono text-cyan-300">
+                Database Management (DBMS)
+              </span>
+              <span class="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700/80 text-xs font-mono text-yellow-300">
+                Operating Systems (OS)
+              </span>
+              <span class="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700/80 text-xs font-mono text-purple-300">
+                Machine Learning
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 5: Developer Tools & Ecosystem -->
+        <div class="glass-card tilt-card p-6 rounded-3xl glow-border reveal-fade md:col-span-2 lg:col-span-2">
+          <div class="tilt-card-content space-y-5">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-amber-600/20 border border-amber-500/30 flex items-center justify-center text-amber-400">
+                <i data-lucide="wrench" class="w-5 h-5"></i>
+              </div>
+              <h3 class="text-lg font-heading font-bold text-white">Developer Tools &amp; Ecosystem</h3>
+            </div>
+
+            <div class="flex flex-wrap gap-2.5">
+              <span class="px-3.5 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700/80 text-xs font-mono text-orange-300 flex items-center gap-1.5">
+                <i class="fa-brands fa-git-alt text-orange-500"></i> Git
+              </span>
+              <span class="px-3.5 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700/80 text-xs font-mono text-slate-200 flex items-center gap-1.5">
+                <i class="fa-brands fa-github text-white"></i> GitHub
+              </span>
+              <span class="px-3.5 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700/80 text-xs font-mono text-blue-300 flex items-center gap-1.5">
+                <i class="fa-solid fa-code text-blue-400"></i> VS Code
+              </span>
+              <span class="px-3.5 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700/80 text-xs font-mono text-emerald-300 flex items-center gap-1.5">
+                <i class="fa-brands fa-android text-emerald-400"></i> Android Studio
+              </span>
+              <span class="px-3.5 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700/80 text-xs font-mono text-purple-300 flex items-center gap-1.5">
+                <i class="fa-solid fa-moon text-purple-400"></i> Eclipse IDE
+              </span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Projects Section -->
+  <section id="projects" class="py-24 relative z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Section Header -->
+      <div class="text-center space-y-3 mb-12 reveal-fade">
+        <span class="text-xs font-mono font-bold tracking-widest text-indigo-400 uppercase bg-indigo-950/60 px-3.5 py-1.5 rounded-full border border-indigo-500/30">Portfolio Work</span>
+        <h2 class="text-3xl sm:text-5xl font-heading font-bold text-white">Featured <span class="text-gradient">Projects</span></h2>
+        <p class="text-slate-400 text-sm sm:text-base max-w-2xl mx-auto">Explore key mobile applications, algorithmic software, and web systems. <span class="text-indigo-300 font-semibold">Click any card to visit the GitHub repository.</span></p>
+      </div>
+
+      <!-- Filter Tabs -->
+      <div class="flex flex-wrap items-center justify-center gap-3 mb-12 reveal-fade">
+        <button data-filter="all" class="filter-btn px-5 py-2 rounded-xl text-xs font-mono font-semibold bg-indigo-600 text-white shadow-lg shadow-indigo-600/30 transition-all">All Projects</button>
+        <button data-filter="mobile" class="filter-btn px-5 py-2 rounded-xl text-xs font-mono font-semibold bg-slate-800/80 text-slate-400 hover:text-white transition-all">📱 Mobile Apps</button>
+        <button data-filter="algorithms" class="filter-btn px-5 py-2 rounded-xl text-xs font-mono font-semibold bg-slate-800/80 text-slate-400 hover:text-white transition-all">Algorithms &amp; Java</button>
+        <button data-filter="web" class="filter-btn px-5 py-2 rounded-xl text-xs font-mono font-semibold bg-slate-800/80 text-slate-400 hover:text-white transition-all">Web Development</button>
+        <button data-filter="python" class="filter-btn px-5 py-2 rounded-xl text-xs font-mono font-semibold bg-slate-800/80 text-slate-400 hover:text-white transition-all">Python Utility</button>
+      </div>
+
+      <!-- Projects Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        
+        <!-- Project 1: Smart University App (Mobile App Dev) -->
+        <div class="project-card project-clickable-card glass-card tilt-card p-8 rounded-3xl glow-border flex flex-col justify-between reveal-fade group" data-category="mobile" data-github="https://github.com/Moyeen786">
+          <div class="tilt-card-content space-y-5">
+            <div class="flex items-center justify-between">
+              <span class="px-3 py-1 rounded-full text-xs font-mono font-medium bg-pink-500/20 text-pink-300 border border-pink-500/30">
+                Aug 2025 – Nov 2025
+              </span>
+              <div class="flex items-center gap-2">
+                <span class="text-[11px] font-mono text-pink-400 group-hover:underline flex items-center gap-1">
+                  <span>GitHub Repo</span>
+                  <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                </span>
+              </div>
+            </div>
+
+            <div>
+              <div class="text-3xl mb-2">📱</div>
+              <h3 class="text-2xl font-heading font-bold text-white group-hover:text-pink-400 transition-colors flex items-center gap-2">
+                <span>Smart University App</span>
+                <i data-lucide="arrow-up-right" class="w-5 h-5 text-pink-400 opacity-0 group-hover:opacity-100 transition-opacity"></i>
+              </h3>
+              <p class="text-xs font-mono text-pink-400 mb-3">Cross-Platform Mobile App &bull; Flutter &amp; Firebase</p>
+              <p class="text-slate-300 text-sm leading-relaxed">
+                A modern campus management mobile application engineered for university students and faculty, featuring live attendance tracking, class timetables, lecture alerts, and course materials repository.
+              </p>
+            </div>
+
+            <!-- Tech Badges -->
+            <div class="flex flex-wrap gap-2 pt-2">
+              <span class="px-2.5 py-1 rounded-lg bg-slate-800/90 text-xs font-mono text-cyan-300">Flutter</span>
+              <span class="px-2.5 py-1 rounded-lg bg-slate-800/90 text-xs font-mono text-cyan-300">Dart</span>
+              <span class="px-2.5 py-1 rounded-lg bg-slate-800/90 text-xs font-mono text-amber-300">Firebase</span>
+              <span class="px-2.5 py-1 rounded-lg bg-slate-800/90 text-xs font-mono text-emerald-300">Android Studio</span>
+            </div>
+          </div>
+
+          <div class="pt-6 border-t border-white/10 mt-6 flex items-center justify-between">
+            <button data-project="smart-university" class="project-details-btn text-xs font-mono font-semibold text-pink-400 hover:text-pink-300 flex items-center gap-1.5 transition-colors">
+              <span>Detailed Architecture</span>
+              <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </button>
+            <span class="text-xs font-mono text-slate-500">Mobile Engineering</span>
+          </div>
+        </div>
+
+        <!-- Project 2: Lightup (Algorithms & Java) -->
+        <div class="project-card project-clickable-card glass-card tilt-card p-8 rounded-3xl glow-border flex flex-col justify-between reveal-fade group" data-category="algorithms java" data-github="https://github.com/Moyeen786">
+          <div class="tilt-card-content space-y-5">
+            <div class="flex items-center justify-between">
+              <span class="px-3 py-1 rounded-full text-xs font-mono font-medium bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                Jan 2026 – Apr 2026
+              </span>
+              <div class="flex items-center gap-2">
+                <span class="text-[11px] font-mono text-indigo-400 group-hover:underline flex items-center gap-1">
+                  <span>GitHub Repo</span>
+                  <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                </span>
+              </div>
+            </div>
+
+            <div>
+              <div class="text-3xl mb-2">🎮</div>
+              <h3 class="text-2xl font-heading font-bold text-white group-hover:text-indigo-400 transition-colors flex items-center gap-2">
+                <span>Lightup</span>
+                <i data-lucide="arrow-up-right" class="w-5 h-5 text-indigo-400 opacity-0 group-hover:opacity-100 transition-opacity"></i>
+              </h3>
+              <p class="text-xs font-mono text-cyan-400 mb-3">Algorithmic Puzzle Game &bull; Java Swing</p>
+              <p class="text-slate-300 text-sm leading-relaxed">
+                Developed an algorithmic game utilizing Java and Java Swing, incorporating Greedy Algorithms, Divide &amp; Conquer, and Dynamic Programming for optimal board states and responsive gameplay mechanics.
+              </p>
+            </div>
+
+            <!-- Tech Badges -->
+            <div class="flex flex-wrap gap-2 pt-2">
+              <span class="px-2.5 py-1 rounded-lg bg-slate-800/90 text-xs font-mono text-indigo-300">Java</span>
+              <span class="px-2.5 py-1 rounded-lg bg-slate-800/90 text-xs font-mono text-cyan-300">Java Swing</span>
+              <span class="px-2.5 py-1 rounded-lg bg-slate-800/90 text-xs font-mono text-pink-300">Greedy Algorithm</span>
+              <span class="px-2.5 py-1 rounded-lg bg-slate-800/90 text-xs font-mono text-amber-300">Dynamic Programming</span>
+            </div>
+          </div>
+
+          <div class="pt-6 border-t border-white/10 mt-6 flex items-center justify-between">
+            <button data-project="lightup" class="project-details-btn text-xs font-mono font-semibold text-indigo-400 hover:text-indigo-300 flex items-center gap-1.5 transition-colors">
+              <span>Detailed Architecture</span>
+              <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </button>
+            <span class="text-xs font-mono text-slate-500">Amrita CSE</span>
+          </div>
+        </div>
+
+        <!-- Project 3: Hospital Management System -->
+        <div class="project-card project-clickable-card glass-card tilt-card p-8 rounded-3xl glow-border flex flex-col justify-between reveal-fade group" data-category="web" data-github="https://github.com/Moyeen786">
+          <div class="tilt-card-content space-y-5">
+            <div class="flex items-center justify-between">
+              <span class="px-3 py-1 rounded-full text-xs font-mono font-medium bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+                Aug 2025 – Nov 2025
+              </span>
+              <div class="flex items-center gap-2">
+                <span class="text-[11px] font-mono text-cyan-400 group-hover:underline flex items-center gap-1">
+                  <span>GitHub Repo</span>
+                  <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                </span>
+              </div>
+            </div>
+
+            <div>
+              <div class="text-3xl mb-2">🏥</div>
+              <h3 class="text-2xl font-heading font-bold text-white group-hover:text-cyan-400 transition-colors flex items-center gap-2">
+                <span>Hospital Management System</span>
+                <i data-lucide="arrow-up-right" class="w-5 h-5 text-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity"></i>
+              </h3>
+              <p class="text-xs font-mono text-cyan-400 mb-3">Healthcare Portal &bull; Full-Stack Web</p>
+              <p class="text-slate-300 text-sm leading-relaxed">
+                Designed a modern web application focused on healthcare management, patient record oversight, and clinical workflows. Utilized HTML5, CSS3, JavaScript, and Bootstrap for intuitive responsive UI/UX.
+              </p>
+            </div>
+
+            <!-- Tech Badges -->
+            <div class="flex flex-wrap gap-2 pt-2">
+              <span class="px-2.5 py-1 rounded-lg bg-slate-800/90 text-xs font-mono text-orange-300">HTML5</span>
+              <span class="px-2.5 py-1 rounded-lg bg-slate-800/90 text-xs font-mono text-blue-300">CSS3</span>
+              <span class="px-2.5 py-1 rounded-lg bg-slate-800/90 text-xs font-mono text-yellow-300">JavaScript</span>
+              <span class="px-2.5 py-1 rounded-lg bg-slate-800/90 text-xs font-mono text-purple-300">Bootstrap</span>
+            </div>
+          </div>
+
+          <div class="pt-6 border-t border-white/10 mt-6 flex items-center justify-between">
+            <button data-project="hospital-management" class="project-details-btn text-xs font-mono font-semibold text-cyan-400 hover:text-cyan-300 flex items-center gap-1.5 transition-colors">
+              <span>Detailed Architecture</span>
+              <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </button>
+            <span class="text-xs font-mono text-slate-500">Healthcare IT</span>
+          </div>
+        </div>
+
+        <!-- Project 4: Python Unit Converter -->
+        <div class="project-card project-clickable-card glass-card tilt-card p-8 rounded-3xl glow-border flex flex-col justify-between reveal-fade group" data-category="python" data-github="https://github.com/Moyeen786">
+          <div class="tilt-card-content space-y-5">
+            <div class="flex items-center justify-between">
+              <span class="px-3 py-1 rounded-full text-xs font-mono font-medium bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                Aug 2024 – Nov 2024
+              </span>
+              <div class="flex items-center gap-2">
+                <span class="text-[11px] font-mono text-amber-400 group-hover:underline flex items-center gap-1">
+                  <span>GitHub Repo</span>
+                  <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                </span>
+              </div>
+            </div>
+
+            <div>
+              <div class="text-3xl mb-2">🔄</div>
+              <h3 class="text-2xl font-heading font-bold text-white group-hover:text-amber-400 transition-colors flex items-center gap-2">
+                <span>Python Unit Converter</span>
+                <i data-lucide="arrow-up-right" class="w-5 h-5 text-amber-400 opacity-0 group-hover:opacity-100 transition-opacity"></i>
+              </h3>
+              <p class="text-xs font-mono text-amber-400 mb-3">Modular Utility App &bull; Python</p>
+              <p class="text-slate-300 text-sm leading-relaxed">
+                Created a multi-category utility application in Python that seamlessly converts diverse physical, digital, and metric units. Enhanced usability with input validation and clean error recovery.
+              </p>
+            </div>
+
+            <!-- Tech Badges -->
+            <div class="flex flex-wrap gap-2 pt-2">
+              <span class="px-2.5 py-1 rounded-lg bg-slate-800/90 text-xs font-mono text-yellow-300">Python 3</span>
+              <span class="px-2.5 py-1 rounded-lg bg-slate-800/90 text-xs font-mono text-indigo-300">Clean Architecture</span>
+              <span class="px-2.5 py-1 rounded-lg bg-slate-800/90 text-xs font-mono text-cyan-300">Modular Registry</span>
+              <span class="px-2.5 py-1 rounded-lg bg-slate-800/90 text-xs font-mono text-emerald-300">Math Precision</span>
+            </div>
+          </div>
+
+          <div class="pt-6 border-t border-white/10 mt-6 flex items-center justify-between">
+            <button data-project="python-converter" class="project-details-btn text-xs font-mono font-semibold text-amber-400 hover:text-amber-300 flex items-center gap-1.5 transition-colors">
+              <span>Detailed Architecture</span>
+              <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </button>
+            <span class="text-xs font-mono text-slate-500">Core Utility</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Education & Certifications Section -->
+  <section id="education" class="py-24 relative z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+        
+        <!-- Education Timeline (Left) -->
+        <div class="lg:col-span-7 space-y-8 reveal-fade">
+          <div class="space-y-2">
+            <span class="text-xs font-mono font-bold tracking-widest text-indigo-400 uppercase bg-indigo-950/60 px-3.5 py-1.5 rounded-full border border-indigo-500/30">Academic Track</span>
+            <h2 class="text-3xl sm:text-4xl font-heading font-bold text-white">Education <span class="text-gradient">Timeline</span></h2>
+          </div>
+
+          <!-- Timeline Container -->
+          <div class="relative pl-10 space-y-8">
+            <div class="timeline-stem"></div>
+
+            <!-- Timeline Item 1 -->
+            <div class="relative group">
+              <div class="absolute -left-10 top-1.5 w-6 h-6 rounded-full bg-indigo-600 border-4 border-[#070913] shadow-lg shadow-indigo-600/50 group-hover:scale-125 transition-transform"></div>
+              <div class="glass-card p-6 rounded-2xl glow-border">
+                <span class="px-2.5 py-1 rounded-md text-xs font-mono bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">2024 – 2028</span>
+                <h3 class="text-lg font-heading font-bold text-white mt-2">Bachelor of Technology (B.Tech) in Computer Science &amp; Engineering</h3>
+                <p class="text-sm text-cyan-400 font-medium">Amrita School of Engineering, Coimbatore</p>
+                <p class="text-xs text-slate-400 mt-2 leading-relaxed">
+                  Focusing on Mobile Application Development, Advanced Data Structures, Algorithms, Software Engineering Principles, and Artificial Intelligence.
+                </p>
+              </div>
+            </div>
+
+            <!-- Timeline Item 2 -->
+            <div class="relative group">
+              <div class="absolute -left-10 top-1.5 w-6 h-6 rounded-full bg-cyan-500 border-4 border-[#070913] shadow-lg shadow-cyan-500/50 group-hover:scale-125 transition-transform"></div>
+              <div class="glass-card p-6 rounded-2xl glow-border">
+                <span class="px-2.5 py-1 rounded-md text-xs font-mono bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">2022 – 2024</span>
+                <h3 class="text-lg font-heading font-bold text-white mt-2">Class XII (Intermediate Education - MPC)</h3>
+                <p class="text-sm text-cyan-400 font-medium">Bhashyam Junior College &bull; BIEAP</p>
+                <p class="text-xs text-slate-400 mt-2 leading-relaxed">
+                  Rigorous focus on Higher Mathematics, Physics, and Chemistry foundation with high academic excellence.
+                </p>
+              </div>
+            </div>
+
+            <!-- Timeline Item 3 -->
+            <div class="relative group">
+              <div class="absolute -left-10 top-1.5 w-6 h-6 rounded-full bg-pink-500 border-4 border-[#070913] shadow-lg shadow-pink-500/50 group-hover:scale-125 transition-transform"></div>
+              <div class="glass-card p-6 rounded-2xl glow-border">
+                <span class="px-2.5 py-1 rounded-md text-xs font-mono bg-pink-500/20 text-pink-300 border border-pink-500/30">2020 – 2022</span>
+                <h3 class="text-lg font-heading font-bold text-white mt-2">Class X (Secondary Education)</h3>
+                <p class="text-sm text-pink-400 font-medium">Viswasanthi English Medium High School &bull; BSEAP</p>
+                <p class="text-xs text-slate-400 mt-2 leading-relaxed">
+                  Strong foundational schooling in Science and Mathematics, laying the baseline for analytical engineering skills.
+                </p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Awards & Certifications (Right) -->
+        <div class="lg:col-span-5 space-y-8 reveal-fade">
+          <div class="space-y-2">
+            <span class="text-xs font-mono font-bold tracking-widest text-amber-400 uppercase bg-amber-950/60 px-3.5 py-1.5 rounded-full border border-amber-500/30">Credentials</span>
+            <h2 class="text-3xl sm:text-4xl font-heading font-bold text-white">Awards &amp; <span class="text-gradient">Certifications</span></h2>
+          </div>
+
+          <div class="space-y-4">
+            
+            <!-- Cert 1: IBM -->
+            <div class="glass-card tilt-card p-5 rounded-2xl glow-border flex items-center gap-4">
+              <div class="tilt-card-content flex items-center gap-4 w-full">
+                <div class="w-12 h-12 rounded-xl bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-blue-400 shrink-0 font-bold font-mono">
+                  IBM
+                </div>
+                <div>
+                  <h4 class="text-base font-bold text-white">IBM SkillsBuild</h4>
+                  <p class="text-xs text-slate-400">Issued by IBM &bull; Foundational Digital &amp; Technical Skills</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Cert 2: MS Cloud -->
+            <div class="glass-card tilt-card p-5 rounded-2xl glow-border flex items-center gap-4">
+              <div class="tilt-card-content flex items-center gap-4 w-full">
+                <div class="w-12 h-12 rounded-xl bg-cyan-600/20 border border-cyan-500/30 flex items-center justify-center text-cyan-400 shrink-0">
+                  <i data-lucide="cloud" class="w-6 h-6"></i>
+                </div>
+                <div>
+                  <h4 class="text-base font-bold text-white">Describe Cloud Computing</h4>
+                  <p class="text-xs text-slate-400">Issued by Microsoft &bull; Cloud Concepts &amp; Architecture</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Cert 3: MS T-SQL -->
+            <div class="glass-card tilt-card p-5 rounded-2xl glow-border flex items-center gap-4">
+              <div class="tilt-card-content flex items-center gap-4 w-full">
+                <div class="w-12 h-12 rounded-xl bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 shrink-0">
+                  <i data-lucide="database" class="w-6 h-6"></i>
+                </div>
+                <div>
+                  <h4 class="text-base font-bold text-white">Transact-SQL Programming</h4>
+                  <p class="text-xs text-slate-400">Issued by Microsoft &bull; Querying &amp; Data Manipulation</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Cert 4: MS Stored Procedures -->
+            <div class="glass-card tilt-card p-5 rounded-2xl glow-border flex items-center gap-4">
+              <div class="tilt-card-content flex items-center gap-4 w-full">
+                <div class="w-12 h-12 rounded-xl bg-pink-600/20 border border-pink-500/30 flex items-center justify-center text-pink-400 shrink-0">
+                  <i data-lucide="file-code" class="w-6 h-6"></i>
+                </div>
+                <div>
+                  <h4 class="text-base font-bold text-white">Stored Procedures &amp; Functions</h4>
+                  <p class="text-xs text-slate-400">Issued by Microsoft &bull; Advanced Database Logic &amp; UDFs</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Contact & Connect Section -->
+  <section id="contact" class="py-24 relative z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Section Header -->
+      <div class="text-center space-y-3 mb-16 reveal-fade">
+        <span class="text-xs font-mono font-bold tracking-widest text-pink-400 uppercase bg-pink-950/60 px-3.5 py-1.5 rounded-full border border-pink-500/30">Let's Connect</span>
+        <h2 class="text-3xl sm:text-5xl font-heading font-bold text-white">Get in <span class="text-gradient">Touch</span></h2>
+        <p class="text-slate-400 text-sm sm:text-base max-w-2xl mx-auto">Feel free to reach out for mobile app projects, software engineering internships, or collaborations.</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+        
+        <!-- Contact Cards (Left) -->
+        <div class="lg:col-span-5 space-y-4 reveal-fade">
+          
+          <!-- Email Card -->
+          <div class="glass-card p-6 rounded-2xl glow-border flex items-center justify-between group">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-xl bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
+                <i data-lucide="mail" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <p class="text-xs font-mono text-slate-400">Email Address</p>
+                <p class="text-sm font-semibold text-white truncate max-w-[210px] sm:max-w-xs">cb.sc.u4cse24347@cb.students.amrita.edu</p>
+              </div>
+            </div>
+            <button onclick="copyToClipboard('cb.sc.u4cse24347@cb.students.amrita.edu', 'Email')" class="p-2.5 rounded-xl bg-slate-800/80 hover:bg-indigo-600 text-slate-300 hover:text-white transition-colors" title="Copy email">
+              <i data-lucide="copy" class="w-4 h-4"></i>
+            </button>
+          </div>
+
+          <!-- Phone Card -->
+          <div class="glass-card p-6 rounded-2xl glow-border flex items-center justify-between group">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-xl bg-emerald-600/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+                <i data-lucide="phone" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <p class="text-xs font-mono text-slate-400">Phone Number</p>
+                <p class="text-sm font-semibold text-white">+91 6303702207</p>
+              </div>
+            </div>
+            <button onclick="copyToClipboard('+916303702207', 'Phone Number')" class="p-2.5 rounded-xl bg-slate-800/80 hover:bg-emerald-600 text-slate-300 hover:text-white transition-colors" title="Copy phone">
+              <i data-lucide="copy" class="w-4 h-4"></i>
+            </button>
+          </div>
+
+          <!-- Socials Card -->
+          <div class="glass-card p-6 rounded-2xl glow-border space-y-4">
+            <p class="text-xs font-mono text-slate-400">Professional Profiles</p>
+            <div class="flex flex-col sm:flex-row gap-3">
+              <a href="https://github.com/Moyeen786" target="_blank" rel="noopener noreferrer" class="flex-1 py-3 px-4 rounded-xl bg-slate-800/80 hover:bg-slate-700 border border-slate-700 text-white font-medium text-xs flex items-center justify-center gap-2 transition-all">
+                <i class="fa-brands fa-github text-base text-indigo-400"></i>
+                <span>GitHub Profile</span>
+              </a>
+              <a href="https://www.linkedin.com/in/moyeen-shaik-b19a98306/" target="_blank" rel="noopener noreferrer" class="flex-1 py-3 px-4 rounded-xl bg-slate-800/80 hover:bg-slate-700 border border-slate-700 text-white font-medium text-xs flex items-center justify-center gap-2 transition-all">
+                <i class="fa-brands fa-linkedin text-base text-cyan-400"></i>
+                <span>LinkedIn Profile</span>
+              </a>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Interactive Contact Form (Right) -->
+        <div class="lg:col-span-7 glass-card p-8 sm:p-10 rounded-3xl glow-border reveal-fade">
+          <form id="contact-form" class="space-y-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div class="space-y-2">
+                <label for="contact-name" class="block text-xs font-mono text-slate-300">Your Name</label>
+                <input type="text" id="contact-name" required placeholder="John Doe" class="w-full px-4 py-3 rounded-xl bg-slate-900/80 border border-white/10 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors" />
+              </div>
+              <div class="space-y-2">
+                <label for="contact-email" class="block text-xs font-mono text-slate-300">Your Email</label>
+                <input type="email" id="contact-email" required placeholder="john@example.com" class="w-full px-4 py-3 rounded-xl bg-slate-900/80 border border-white/10 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors" />
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <label for="contact-message" class="block text-xs font-mono text-slate-300">Your Message</label>
+              <textarea id="contact-message" rows="4" required placeholder="Hi Shaik, I'd like to discuss a mobile app / software opportunity..." class="w-full px-4 py-3 rounded-xl bg-slate-900/80 border border-white/10 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors"></textarea>
+            </div>
+
+            <button type="submit" class="w-full py-4 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-cyan-500 hover:from-indigo-500 hover:to-cyan-400 text-white font-semibold text-sm btn-3d flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/30">
+              <i data-lucide="send" class="w-4 h-4"></i>
+              <span>Send Message</span>
+            </button>
+          </form>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="relative z-10 py-12 border-t border-white/10 bg-[#05070e]/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+      
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center font-heading font-black text-sm text-white">
+          SM
+        </div>
+        <span class="text-sm font-semibold text-white">Shaik Moyeen &copy; 2026</span>
+      </div>
+
+      <div class="text-xs font-mono text-slate-500 text-center">
+        Designed &amp; Engineered with Three.js, Flutter Stack &bull; Amrita School of Engineering
+      </div>
+
+      <div class="flex items-center gap-4">
+        <a href="https://github.com/Moyeen786" target="_blank" rel="noopener noreferrer" class="text-slate-400 hover:text-white transition-colors">
+          <i class="fa-brands fa-github text-lg"></i>
+        </a>
+        <a href="https://www.linkedin.com/in/moyeen-shaik-b19a98306/" target="_blank" rel="noopener noreferrer" class="text-slate-400 hover:text-cyan-400 transition-colors">
+          <i class="fa-brands fa-linkedin text-lg"></i>
+        </a>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- Project Details Modal -->
+  <div id="project-modal" class="custom-modal fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+    <div class="modal-content glass-card max-w-2xl w-full rounded-3xl p-6 sm:p-8 space-y-6 max-h-[90vh] overflow-y-auto border border-white/20 shadow-2xl">
+      
+      <div class="flex items-start justify-between pb-4 border-b border-white/10">
+        <div>
+          <span id="modal-category" class="text-xs font-mono text-cyan-400 uppercase tracking-wider"></span>
+          <h3 id="modal-title" class="text-2xl font-heading font-bold text-white mt-1"></h3>
+          <span id="modal-timeline" class="text-xs font-mono text-indigo-300"></span>
+        </div>
+        <button id="modal-close-btn" class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-slate-400 hover:text-white transition-colors">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- Description -->
+      <p id="modal-desc" class="text-slate-300 text-sm leading-relaxed"></p>
+
+      <!-- Tech Stack Badges -->
+      <div class="space-y-2">
+        <h4 class="text-xs font-mono text-slate-400 uppercase">Technologies Utilized:</h4>
+        <div id="modal-tech-stack" class="flex flex-wrap gap-2"></div>
+      </div>
+
+      <!-- Key Engineering Highlights -->
+      <div class="space-y-2">
+        <h4 class="text-xs font-mono text-slate-400 uppercase">Key Highlights &amp; Architecture:</h4>
+        <ul id="modal-highlights" class="space-y-2"></ul>
+      </div>
+
+      <!-- Architecture Pipeline -->
+      <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 space-y-1.5">
+        <h4 class="text-xs font-mono text-cyan-400">Architecture Pipeline:</h4>
+        <p id="modal-architecture" class="text-xs font-mono text-slate-300"></p>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="pt-4 border-t border-white/10 flex items-center justify-between">
+        <a id="modal-github-link" href="https://github.com/Moyeen786" target="_blank" rel="noopener noreferrer" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-xs flex items-center gap-2">
+          <i class="fa-brands fa-github text-sm"></i>
+          <span>View GitHub Repository</span>
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Interactive Resume Modal (Printable & Viewable) -->
+  <div id="resume-modal" class="custom-modal fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+    <div class="modal-content glass-card max-w-4xl w-full rounded-3xl p-6 sm:p-10 space-y-6 max-h-[92vh] overflow-y-auto border border-white/20 shadow-2xl printable-area">
+      
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between pb-4 border-b border-white/10 no-print">
+        <div class="flex items-center gap-2">
+          <i data-lucide="file-text" class="w-5 h-5 text-indigo-400"></i>
+          <h3 class="text-xl font-heading font-bold text-white">Digital Resume &bull; Shaik Moyeen</h3>
+        </div>
+        <div class="flex items-center gap-3">
+          <button id="print-resume-btn" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-xs flex items-center gap-2">
+            <i data-lucide="printer" class="w-4 h-4"></i>
+            <span>Print / Save PDF</span>
+          </button>
+          <button id="resume-modal-close-btn" class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-slate-400 hover:text-white transition-colors">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Printable Resume Body -->
+      <div class="space-y-6 text-slate-200">
+        
+        <!-- Header Info -->
+        <div class="border-b border-slate-700/60 pb-5">
+          <h1 class="text-3xl font-heading font-black text-white">Shaik Moyeen</h1>
+          <p class="text-sm font-mono text-cyan-400 mt-1">Computer Science &amp; Engineering Student &bull; Mobile &amp; Software Developer</p>
+          <div class="flex flex-wrap gap-4 mt-3 text-xs text-slate-400 font-mono">
+            <span>✉️ cb.sc.u4cse24347@cb.students.amrita.edu</span>
+            <span>📞 +91 6303702207</span>
+            <span>🔗 github.com/Moyeen786</span>
+            <span>🔗 linkedin.com/in/moyeen-shaik-b19a98306</span>
+          </div>
+        </div>
+
+        <!-- Profile Summary -->
+        <div>
+          <h2 class="text-base font-bold text-indigo-300 uppercase tracking-wider font-mono border-b border-slate-800 pb-1 mb-2">Profile Summary</h2>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Dedicated Computer Science and Engineering student with hands-on experience in cross-platform mobile application development, software engineering, and healthcare management systems. Proficient in a mix of programming languages including Java, Python, Dart, and C, with a solid understanding of Data Structures and Algorithms. Possesses strong problem-solving skills and a passion for mobile app creation, web development, and artificial intelligence.
+          </p>
+        </div>
+
+        <!-- Education -->
+        <div>
+          <h2 class="text-base font-bold text-indigo-300 uppercase tracking-wider font-mono border-b border-slate-800 pb-1 mb-3">Education</h2>
+          <div class="space-y-3 text-xs">
+            <div class="flex justify-between items-start">
+              <div>
+                <p class="font-bold text-white">Bachelor of Technology (B.Tech) in Computer Science and Engineering</p>
+                <p class="text-slate-400">Amrita School of Engineering, Coimbatore</p>
+              </div>
+              <span class="font-mono text-cyan-400">2024 – 2028</span>
+            </div>
+            <div class="flex justify-between items-start">
+              <div>
+                <p class="font-bold text-white">Class XII – Board of Intermediate Education, Andhra Pradesh (BIEAP)</p>
+                <p class="text-slate-400">Bhashyam Junior College</p>
+              </div>
+              <span class="font-mono text-cyan-400">2022 – 2024</span>
+            </div>
+            <div class="flex justify-between items-start">
+              <div>
+                <p class="font-bold text-white">Class X – Board of Secondary Education, Andhra Pradesh (BSEAP)</p>
+                <p class="text-slate-400">Viswasanthi English Medium High School</p>
+              </div>
+              <span class="font-mono text-cyan-400">2020 – 2022</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Skills -->
+        <div>
+          <h2 class="text-base font-bold text-indigo-300 uppercase tracking-wider font-mono border-b border-slate-800 pb-1 mb-2">Technical Skills</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+            <p><strong class="text-white">Languages:</strong> Python, Java, Dart, C, SQL, HTML5, CSS3, JavaScript</p>
+            <p><strong class="text-white">Mobile Development:</strong> Flutter, Dart, Firebase, Android Studio, State Management</p>
+            <p><strong class="text-white">Core CS Concepts:</strong> Data Structures &amp; Algorithms, OOP, Machine Learning, OS, DBMS</p>
+            <p><strong class="text-white">Web &amp; Frameworks:</strong> REST APIs, Bootstrap 5, Responsive Web Design, Java Swing</p>
+            <p><strong class="text-white">Tools &amp; IDEs:</strong> Git, GitHub, VS Code, Android Studio, Eclipse IDE</p>
+          </div>
+        </div>
+
+        <!-- Projects -->
+        <div>
+          <h2 class="text-base font-bold text-indigo-300 uppercase tracking-wider font-mono border-b border-slate-800 pb-1 mb-3">Key Projects</h2>
+          <div class="space-y-4 text-xs">
+            
+            <div>
+              <div class="flex justify-between font-bold text-white">
+                <span>Smart University App (Flutter, Dart, Firebase)</span>
+                <span class="font-mono text-cyan-400 font-normal">Aug 2025 – Nov 2025</span>
+              </div>
+              <ul class="list-disc list-inside text-slate-300 space-y-1 mt-1">
+                <li>Engineered a cross-platform mobile application for campus portal workflows, live attendance tracking, and lecture schedules.</li>
+                <li>Integrated Firebase Authentication, Cloud Firestore real-time updates, and offline caching.</li>
+              </ul>
+            </div>
+
+            <div>
+              <div class="flex justify-between font-bold text-white">
+                <span>Lightup (Java, Java Swing, Algorithms)</span>
+                <span class="font-mono text-cyan-400 font-normal">Jan 2026 – Apr 2026</span>
+              </div>
+              <ul class="list-disc list-inside text-slate-300 space-y-1 mt-1">
+                <li>Developed a game utilizing Java and Java Swing, incorporating Greedy Algorithm, Divide &amp; Conquer, and Dynamic Programming.</li>
+                <li>Successfully implemented algorithms to enhance user engagement and solver performance.</li>
+              </ul>
+            </div>
+
+            <div>
+              <div class="flex justify-between font-bold text-white">
+                <span>Hospital Management System (HTML5, CSS3, JS, Bootstrap)</span>
+                <span class="font-mono text-cyan-400 font-normal">Aug 2025 – Nov 2025</span>
+              </div>
+              <ul class="list-disc list-inside text-slate-300 space-y-1 mt-1">
+                <li>Designed a web application focused on healthcare management and clinical scheduling.</li>
+                <li>Utilized HTML5, CSS3, JavaScript, and Bootstrap for responsive design.</li>
+              </ul>
+            </div>
+
+            <div>
+              <div class="flex justify-between font-bold text-white">
+                <span>Python Unit Converter (Python Desktop Utility)</span>
+                <span class="font-mono text-cyan-400 font-normal">Aug 2024 – Nov 2024</span>
+              </div>
+              <ul class="list-disc list-inside text-slate-300 space-y-1 mt-1">
+                <li>Created a utility application in Python that converts various physical and digital units.</li>
+                <li>Enhanced usability through an intuitive interface and precision math calculation.</li>
+              </ul>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Awards / Certifications -->
+        <div>
+          <h2 class="text-base font-bold text-indigo-300 uppercase tracking-wider font-mono border-b border-slate-800 pb-1 mb-2">Awards &amp; Certifications</h2>
+          <ul class="list-disc list-inside text-xs text-slate-300 space-y-1">
+            <li><strong>IBM SkillsBuild</strong> – IBM</li>
+            <li><strong>Describe Cloud Computing</strong> – Microsoft</li>
+            <li><strong>Get started with Transact-SQL programming</strong> – Microsoft</li>
+            <li><strong>Create stored procedures and user-defined functions</strong> – Microsoft</li>
+          </ul>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 glass-card px-5 py-3 rounded-2xl border border-indigo-500/50 shadow-2xl flex items-center gap-3">
+    <div class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs font-bold">✓</div>
+    <span id="toast-msg" class="text-xs font-medium text-white">Action Completed!</span>
+  </div>
+
+  <!-- Initialize Lucide Icons & Scripts -->
+  <script>
+    lucide.createIcons();
+  </script>
+  <script src="assets/js/three-scene.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
